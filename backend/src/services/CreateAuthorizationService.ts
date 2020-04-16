@@ -3,6 +3,8 @@ import Users from '../models/Users';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 
+import authconfig from '../config/authconfig';
+
 interface Request {
   email: string;
   password: string;
@@ -31,9 +33,11 @@ class CreateAuthorizationService {
       throw new Error('E-mail or password incorrect');
     }
 
-    const token = sign({}, 'eefecd96cd225ac16316618680cdfbdc', {
+    const { secret, expiresIn } = authconfig.jwt;
+
+    const token = sign({}, secret, {
       subject: user.id,
-      expiresIn: '1d'
+      expiresIn,
     });
 
     return { user, token };
