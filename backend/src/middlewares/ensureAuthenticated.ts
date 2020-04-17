@@ -3,17 +3,23 @@ import { verify } from 'jsonwebtoken';
 
 import authconfig from '../config/authconfig';
 
+import AppError from '../errors/AppError';
+
 interface TokenPayload {
   iat: number;
   exp: number;
   sub: string;
 }
 
-export default function ensureAuthenticated(request: Request, response: Response, next: NextFunction): void {
+export default function ensureAuthenticated(
+  request: Request,
+  response: Response,
+  next: NextFunction
+): void {
   const authenticatedToken = request.headers.authorization;
 
-  if(!authenticatedToken) {
-    throw new Error('JWT token is missing');
+  if (!authenticatedToken) {
+    throw new AppError('JWT token is missing', 401);
   }
 
   const [, token] = authenticatedToken.split(' ');
@@ -24,11 +30,11 @@ export default function ensureAuthenticated(request: Request, response: Response
     const { sub } = decoded as TokenPayload;
 
     request.user = {
-      id: sub
+      id: sub,
     };
 
     return next();
   } catch {
-    throw new Error('JWT token is wrong');
+    throw new AppError('JWT token is wrong', 401);
   }
 }

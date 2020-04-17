@@ -1,7 +1,9 @@
 import { getRepository } from 'typeorm';
-import Users from '../models/Users';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+import Users from '../models/Users';
+
+import AppError from '../errors/AppError';
 
 import authconfig from '../config/authconfig';
 
@@ -16,21 +18,21 @@ interface Response {
 }
 
 class CreateAuthorizationService {
-  public async execute({email, password}: Request): Promise<Response> {
+  public async execute({ email, password }: Request): Promise<Response> {
     const usersRepository = getRepository(Users);
 
     const user = await usersRepository.findOne({
-      where: {email}
+      where: { email },
     });
 
-    if(!user) {
-      throw new Error('E-mail or password incorrect');
+    if (!user) {
+      throw new AppError('E-mail or password incorrect', 401);
     }
 
     const passwordMatched = await compare(password, user.password);
 
-    if(!passwordMatched) {
-      throw new Error('E-mail or password incorrect');
+    if (!passwordMatched) {
+      throw new AppError('E-mail or password incorrect', 401);
     }
 
     const { secret, expiresIn } = authconfig.jwt;
