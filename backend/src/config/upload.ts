@@ -2,9 +2,12 @@ import multer from 'multer';
 import crypto from 'crypto';
 import path from 'path';
 
+const tmpPath = path.resolve(__dirname, '..', '..', 'tmp');
+
 export default {
+  directory: tmpPath,
   storage: multer.diskStorage({
-    destination: path.resolve(__dirname, '..', '..', 'tmp'),
+    destination: tmpPath,
     filename(request, file, callback) {
       const fileHash = crypto.randomBytes(10).toString('HEX');
       const filename = `${fileHash}-${file.originalname}`;
