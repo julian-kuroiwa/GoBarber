@@ -1,4 +1,3 @@
-import { getRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import Users from '@modules/users/infra/typeorm/entities/Users';
@@ -6,24 +5,23 @@ import Users from '@modules/users/infra/typeorm/entities/Users';
 import AppError from '@shared/errors/AppError';
 
 import authconfig from '@config/authconfig';
+import IUserRepository from '../repositories/IUserRepository';
 
-interface Request {
+interface IRequest {
   email: string;
   password: string;
 }
 
-interface Response {
+interface IResponse {
   user: Users;
   token: string;
 }
 
 class CreateAuthorizationService {
-  public async execute({ email, password }: Request): Promise<Response> {
-    const usersRepository = getRepository(Users);
+  constructor(private usersRepository: IUserRepository) {}
 
-    const user = await usersRepository.findOne({
-      where: { email },
-    });
+  public async execute({ email, password }: IRequest): Promise<IResponse> {
+    const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
       throw new AppError('E-mail or password incorrect', 401);
