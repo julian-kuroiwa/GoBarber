@@ -35,7 +35,6 @@ class CreateAppointmentService {
     }
 
     if (getHours(appointmentDate) < 8 || getHours(appointmentDate) > 17) {
-      console.log('inside');
       throw new AppError('You can only appointments between 8am and 5pm');
     }
 
