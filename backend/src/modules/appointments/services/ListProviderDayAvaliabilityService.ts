@@ -1,4 +1,4 @@
-import { getDaysInMonth, getDate } from 'date-fns';
+import { getHours } from 'date-fns';
 import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
@@ -9,15 +9,16 @@ interface IRequest {
   provider_id: string;
   month: number;
   year: number;
+  day: number;
 }
 
 type IResponse = Array<{
-  day: number;
+  hour: number;
   avaliable: boolean;
 }>;
 
 @injectable()
-class ListProviderMonthAvaliabilityService {
+class ListProviderDayAvaliabilityService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository
@@ -27,30 +28,31 @@ class ListProviderMonthAvaliabilityService {
     provider_id,
     month,
     year,
+    day,
   }: IRequest): Promise<IResponse> {
-    const appointments = await this.appointmentsRepository.findAllInMonthFromProvider(
+    const appointments = await this.appointmentsRepository.findAllInDayFromProvider(
       {
         provider_id,
         month,
         year,
+        day,
       }
     );
 
-    const numberOfdaysInMonth = getDaysInMonth(new Date(year, month - 1));
-
-    const eachDayArray = Array.from(
-      { length: numberOfdaysInMonth },
-      (value, index) => index + 1
+    const hourStart = 8;
+    const eachHourArray = Array.from(
+      { length: 10 },
+      (_, index) => index + hourStart
     );
 
-    const avaliability = eachDayArray.map(day => {
-      const appointmentsInDay = appointments.filter(
-        appointment => getDate(appointment.date) === day
+    const avaliability = eachHourArray.map(hour => {
+      const hasAppointmentInHour = appointments.find(
+        appointment => getHours(appointment.date) === hour
       );
 
       return {
-        day,
-        avaliable: appointmentsInDay.length < 10,
+        hour,
+        avaliable: !hasAppointmentInHour,
       };
     });
 
@@ -58,4 +60,4 @@ class ListProviderMonthAvaliabilityService {
   }
 }
 
-export default ListProviderMonthAvaliabilityService;
+export default ListProviderDayAvaliabilityService;
