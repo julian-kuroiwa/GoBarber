@@ -17,16 +17,18 @@ describe('ListProviderDayAvaliability', () => {
     await fakeAppointmentsRepository.create({
       provider_id: 'user',
       date: new Date(2020, 4, 20, 14, 0, 0),
+      user_id: '123123',
     });
 
     await fakeAppointmentsRepository.create({
       provider_id: 'user',
       date: new Date(2020, 4, 20, 15, 0, 0),
+      user_id: '123123',
     });
 
     jest
       .spyOn(Date, 'now')
-      .mockImplementation(() => new Date(2020, 4, 20, 11).getTime());
+      .mockImplementationOnce(() => new Date(2020, 4, 20, 11).getTime());
 
     const avaliability = await listProvidersDayAvaliability.execute({
       provider_id: 'user',
