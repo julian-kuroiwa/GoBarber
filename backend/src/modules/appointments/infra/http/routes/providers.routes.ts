@@ -16,7 +16,7 @@ const providerMonthAvaliabilityController = new ProviderMonthAvaliabilityControl
 
 providersRoute.get('/', providersController.index);
 providersRoute.get(
-  '/:id/day-avaliability',
+  '/:provider_id/day-avaliability',
   celebrate({
     [Segments.PARAMS]: {
       provider_id: Joi.string().uuid().required(),
@@ -25,7 +25,7 @@ providersRoute.get(
   providerDayAvaliabilityController.index
 );
 providersRoute.get(
-  '/:id/month-avaliability',
+  '/:provider_id/month-avaliability',
   celebrate({
     [Segments.PARAMS]: {
       provider_id: Joi.string().uuid().required(),

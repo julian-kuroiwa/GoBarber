@@ -138,6 +138,7 @@ export const NextAppointment = styled.div`
       align-items: center;
       color: #999591;
       margin-left: auto;
+      width: 80px;
 
       svg {
         color: #ff9000;
@@ -158,6 +159,10 @@ export const Section = styled.section`
     display: block;
     padding-bottom: 16px;
     margin-bottom: 16px;
+  }
+
+  p {
+    color: #999591;
   }
 `;
 
