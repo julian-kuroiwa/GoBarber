@@ -1,4 +1,5 @@
 import { injectable, inject } from 'tsyringe';
+import { classToClass } from 'class-transformer';
 
 import Users from '@modules/users/infra/typeorm/entities/Users';
 
@@ -27,7 +28,10 @@ class ListProvidersService {
       });
     }
 
-    await this.cacheProvider.save(`provider-list:${user_id}`, users);
+    await this.cacheProvider.save(
+      `provider-list:${user_id}`,
+      classToClass(users)
+    );
 
     return users;
   }
