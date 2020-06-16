@@ -3,7 +3,7 @@ import { View, Button } from 'react-native';
 
 import { useAuth } from '../../hooks/Auth';
 
-const AppointmentCreate: React.FC = () => {
+const AppointmentCreated: React.FC = () => {
   const { signOut } = useAuth();
 
   return (
@@ -13,4 +13,4 @@ const AppointmentCreate: React.FC = () => {
   );
 };
 
-export default AppointmentCreate;
+export default AppointmentCreated;
