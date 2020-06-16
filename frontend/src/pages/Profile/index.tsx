@@ -65,7 +65,9 @@ const Profile: React.FC = () => {
         password_confirmation
       } : {});
 
-      await api.put('/profile', formData);
+      const response = await api.put('/profile', formData);
+
+      updateUser(response.data);
 
       history.push('/dashboard');
 
@@ -90,7 +92,7 @@ const Profile: React.FC = () => {
         description: 'Ocorreu um erro ao atualizar o perfil. Tente novamente',
       });
     }
-  }, [addToast, history]);
+  }, [addToast, history, updateUser]);
 
   const handleAvatarChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     if(e.target.files) {
